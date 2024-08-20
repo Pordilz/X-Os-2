@@ -1,5 +1,3 @@
-from math import trunc
-
 import streamlit as st
 import numpy as np
 
@@ -24,14 +22,14 @@ def check_draw(board):
 
 def update_scoreboard(winner):
     if winner == "X":
-        st.session_state.scores["X"]["wins"] = st.session_state.scores["X"]["wins"] +1
-        st.session_state.scores["O"]["losses"] = st.session_state.scores["O"]["losses"] +1
+        st.session_state.scores["X"]["wins"] += 1
+        st.session_state.scores["O"]["losses"] += 1
     elif winner == "O":
-        st.session_state.scores["O"]["wins"] = st.session_state.scores["O"]["wins"]+1
-        st.session_state.scores["X"]["losses"] = st.session_state.scores["X"]["losses"] +1
+        st.session_state.scores["O"]["wins"] += 1
+        st.session_state.scores["X"]["losses"] += 1
     else:
-        st.session_state.scores["X"]["draws"] = st.session_state.scores["X"]["draws"] +1
-        st.session_state.scores["O"]["draws"] = st.session_state.scores["O"]["draws"] +1
+        st.session_state.scores["X"]["draws"] += 1
+        st.session_state.scores["O"]["draws"] += 1
 
 
 def reset_scores():
@@ -79,13 +77,13 @@ def main():
 
         st.header("Scoreboard")
         st.write(f"**{st.session_state.scores['X']['name']}**")
-        st.write(f"Wins: {st.session_state.scores['X']['wins'] }")
-        st.write(f"Losses: {st.session_state.scores['X']['losses'] }")
+        st.write(f"Wins: {st.session_state.scores['X']['wins']}")
+        st.write(f"Losses: {st.session_state.scores['X']['losses']}")
         st.write(f"Draws: {st.session_state.scores['X']['draws']}")
         st.write("---")
         st.write(f"**{st.session_state.scores['O']['name']}**")
-        st.write(f"Wins: {st.session_state.scores['O']['wins'] }")
-        st.write(f"Losses: {st.session_state.scores['O']['losses'] }")
+        st.write(f"Wins: {st.session_state.scores['O']['wins']}")
+        st.write(f"Losses: {st.session_state.scores['O']['losses']}")
         st.write(f"Draws: {st.session_state.scores['O']['draws']}")
         st.write("---")
         if st.button("Reset Scores"):
@@ -102,17 +100,23 @@ def play_standard():
         st.session_state.board = np.array([["" for _ in range(3)] for _ in range(3)])
     if 'current_player' not in st.session_state:
         st.session_state.current_player = "X"
+    if 'game_over' not in st.session_state:
+        st.session_state.game_over = False
 
     board = st.session_state.board
     current_player = st.session_state.current_player
     winner = check_winner(board)
 
     if winner is not None:
-        st.success(f"🎉 Player {winner} wins!")
-        update_scoreboard(winner)
+        if not st.session_state.game_over:
+            st.success(f"🎉 Player {winner} wins!")
+            update_scoreboard(winner)
+            st.session_state.game_over = True
     elif check_draw(board):
-        st.warning("It's a draw!")
-        update_scoreboard(None)
+        if not st.session_state.game_over:
+            st.warning("It's a draw!")
+            update_scoreboard(None)
+            st.session_state.game_over = True
     else:
         st.write(f"Current turn: {current_player}")
         for row in range(3):
@@ -130,6 +134,7 @@ def play_standard():
     if st.button("Reset game"):
         st.session_state.board = np.array([["" for _ in range(3)] for _ in range(3)])
         st.session_state.current_player = "X"
+        st.session_state.game_over = False
         st.rerun()
 
 
@@ -138,7 +143,8 @@ def play_modified():
         st.session_state.board = np.array([["" for _ in range(3)] for _ in range(3)])
     if 'current_player' not in st.session_state:
         st.session_state.current_player = "X"
-
+    if 'game_over' not in st.session_state:
+        st.session_state.game_over = False
     if 'moves' not in st.session_state:
         st.session_state.moves = {'X': [], 'O': []}
 
@@ -147,11 +153,15 @@ def play_modified():
     winner = check_winner(board)
 
     if winner is not None:
-        st.success(f"🎉 Player {winner} wins!")
-        update_scoreboard(winner)
+        if not st.session_state.game_over:
+            st.success(f"🎉 Player {winner} wins!")
+            update_scoreboard(winner)
+            st.session_state.game_over = True
     elif check_draw(board):
-        st.warning("It's a draw!")
-        update_scoreboard(None)
+        if not st.session_state.game_over:
+            st.warning("It's a draw!")
+            update_scoreboard(None)
+            st.session_state.game_over = True
     else:
         st.write(f"Current turn: {current_player}")
         for row in range(3):
@@ -170,6 +180,7 @@ def play_modified():
     if st.button("Reset game"):
         st.session_state.board = np.array([["" for _ in range(3)] for _ in range(3)])
         st.session_state.current_player = "X"
+        st.session_state.game_over = False
         st.session_state.moves = {'X': [], 'O': []}
         st.rerun()
 
