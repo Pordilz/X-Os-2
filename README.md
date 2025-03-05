@@ -1,6 +1,6 @@
 # Program Analysis and Detailed Note
 
-This section provides a comprehensive analysis of the provided Tic-Tac-Toe program, detailing its structure, functionality, and implications, as well as instructions for use and technical considerations. The program, written in Python using the Streamlit library, implements a web-based Tic-Tac-Toe game with two distinct modes: Standard and Modified. This note aims to cover all aspects discussed in the initial analysis, ensuring a thorough understanding for both developers and players.
+The program, written in Python using the Streamlit library, implements a web-based Tic-Tac-Toe game with two distinct modes: Standard and Modified. This note aims to cover all aspects discussed in the initial analysis, ensuring a thorough understanding for both developers and players.
 
 ## Program Structure and Functionality
 
